@@ -1,0 +1,9 @@
+{
+  "name": "drupal/pmmi_field_extras",
+  "type": "drupal-module",
+  "description": "PMMI Fields",
+  "keywords": ["Drupal"],
+  "require": {
+    "drupal/core": "^8.6"
+  }
+}
