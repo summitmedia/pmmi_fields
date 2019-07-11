@@ -20,7 +20,6 @@ use Drupal\Core\Form\FormStateInterface;
  */
 class NewsCategoryLink extends NodeLink {
 
-
   /**
    * {@inheritdoc}
    */
@@ -63,11 +62,11 @@ class NewsCategoryLink extends NodeLink {
       }
     }
     elseif (!empty($config['link text'])) {
-      $output = $this->t($config['link text']);
+      $output = $config['link text'];
     }
 
     if (empty($output)) {
-      return array();
+      return [];
     }
 
     // Link.
@@ -76,7 +75,7 @@ class NewsCategoryLink extends NodeLink {
       $entity = $this->entity();
       $url_info = $entity->toUrl();
       if (!empty($config['link class'])) {
-        $url_info->setOption('attributes', array('class' => explode(' ', $config['link class'])));
+        $url_info->setOption('attributes', ['class' => explode(' ', $config['link class'])]);
       }
       $output = \Drupal::l($output, $url_info);
     }
@@ -91,9 +90,9 @@ class NewsCategoryLink extends NodeLink {
       $output = '<' . $wrapper . $class . '>' . $output . '</' . $wrapper . '>';
     }
 
-    return array(
+    return [
       '#markup' => $output,
-    );
+    ];
   }
 
   /**

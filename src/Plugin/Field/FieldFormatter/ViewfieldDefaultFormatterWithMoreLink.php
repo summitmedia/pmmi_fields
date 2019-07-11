@@ -43,6 +43,9 @@ class ViewfieldDefaultFormatterWithMoreLink extends ViewfieldDefaultFormatter {
               $element['#view']->display_handler->options = array_merge($element['#view']->display_handler->options, $more_settings);
             }
             else {
+              if (!isset($element['#view']->displayHandlers)) {
+                continue;
+              }
               $handler = $element['#view']->displayHandlers->get($display_name);
               if (!empty($handler)) {
                 $handler->display['display_options'] = array_merge($handler->display['display_options'], $more_settings);
@@ -52,6 +55,9 @@ class ViewfieldDefaultFormatterWithMoreLink extends ViewfieldDefaultFormatter {
         }
         // Title settings.
         if (!empty($element['#exposed_settings']['view_override_title']) && isset($element['#exposed_settings']['view_title'])) {
+          if (!isset($element['#view']->displayHandlers)) {
+            continue;
+          }
           $handler = $element['#view']->displayHandlers->get($view_display);
           if ($handler->isDefaulted('title')) {
             $element['#view']->display_handler->options['title'] = $element['#exposed_settings']['view_title'];

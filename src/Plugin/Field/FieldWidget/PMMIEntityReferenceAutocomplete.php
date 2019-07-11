@@ -31,13 +31,13 @@ class PMMIEntityReferenceAutocomplete extends EntityReferenceAutocompleteWidget 
     foreach ($view_modes as $key => $view_mode) {
       $options[$key] = $view_mode['label'];
     }
-    $widget['view_mode'] = array(
+    $widget['view_mode'] = [
       '#title' => $this->t('View mode'),
       '#type' => 'select',
       '#default_value' => isset($items[$delta]) ? $items[$delta]->view_mode : 'default',
       '#options' => $options,
       '#weight' => 10,
-    );
+    ];
 
     return $widget;
   }

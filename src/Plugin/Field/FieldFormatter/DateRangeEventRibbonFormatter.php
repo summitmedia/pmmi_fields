@@ -23,6 +23,11 @@ use Drupal\Core\Datetime\DrupalDateTime;
  */
 class DateRangeEventRibbonFormatter extends DateTimeFormatterBase {
 
+  /**
+   * Current type.
+   *
+   * @var array
+   */
   private $currentType;
 
   /**
@@ -121,12 +126,12 @@ class DateRangeEventRibbonFormatter extends DateTimeFormatterBase {
     unset($form['date_format']);
 
     foreach (['month', 'day', 'year'] as $type) {
-      $form['date_format_' . $type] = array(
+      $form['date_format_' . $type] = [
         '#type' => 'textfield',
         '#title' => $this->t('Date format @type', ['@type' => $type]),
         '#description' => $this->t('See <a href="http://php.net/manual/function.date.php" target="_blank">the documentation for PHP date formats</a>.'),
         '#default_value' => $this->getSetting('date_format_' . $type),
-      );
+      ];
     }
     $form['show_end_date'] = [
       '#type' => 'checkbox',

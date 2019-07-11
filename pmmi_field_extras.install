@@ -205,7 +205,7 @@ function pmmi_field_extras_update_8004() {
 
     // Updating field config items.
     if (!$entity_fields = $etm->getStorage('field_config')
-      ->loadByProperties(array('field_name' => $field_id))
+      ->loadByProperties(['field_name' => $field_id])
     ) {
       continue;
     }
@@ -219,10 +219,10 @@ function pmmi_field_extras_update_8004() {
       $new_field->save();
     }
     // Updating entity view display configs.
-    $properties = array(
+    $properties = [
       'targetEntityType' => $field_update->getTargetEntityTypeId(),
       'bundle' => 'containers',
-    );
+    ];
     if ($view_displays = $etm
       ->getStorage('entity_view_display')
       ->loadByProperties($properties)
@@ -231,10 +231,10 @@ function pmmi_field_extras_update_8004() {
         if ($component = $view_display->getComponent($field_id)) {
           // Map field reference formatters to pmmi entity reference ones.
           if ($component['type'] == 'entity_reference_entity_view') {
-            $result_component = array(
-                'type' => 'pmmi_entity_reference_entity_view',
-                'settings' => $component['settings'],
-              ) + $component;
+            $result_component = [
+              'type' => 'pmmi_entity_reference_entity_view',
+              'settings' => $component['settings'],
+            ] + $component;
             $view_display->setComponent($field_id, $result_component)->save();
           }
         }
@@ -257,10 +257,10 @@ function pmmi_field_extras_update_8004() {
               break;
           }
 
-          $form_display->setComponent($field_id, array(
-              'type' => $type,
-              'settings' => $component['settings'],
-            ) + $component)->save();
+          $form_display->setComponent($field_id, [
+            'type' => $type,
+            'settings' => $component['settings'],
+          ] + $component)->save();
         }
       }
     }
@@ -270,7 +270,7 @@ function pmmi_field_extras_update_8004() {
 /**
  * Update Download Content Type.
  *
- * Delete fields (Member Price, Non-Member Price, Disclaimer, Report Type, Year).
+ * Delete fields: Member Price, Non-Member Price, Disclaimer, Report Type, Year.
  */
 function pmmi_field_extras_update_8005() {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
@@ -291,7 +291,7 @@ function pmmi_field_extras_update_8005() {
     $field_definition->delete();
     // Updating field config items.
     if (!$entity_fields = $etm->getStorage('field_config')
-      ->loadByProperties(array('field_name' => $field))
+      ->loadByProperties(['field_name' => $field])
     ) {
       continue;
     }
@@ -299,16 +299,16 @@ function pmmi_field_extras_update_8005() {
       $field_id->delete();
     }
     // Updating entity view display configs.
-    $properties = array(
+    $properties = [
       'targetEntityType' => 'node',
       'bundle' => 'download',
-    );
+    ];
     if ($view_displays = $etm
       ->getStorage('entity_view_display')
       ->loadByProperties($properties)
     ) {
       foreach ($view_displays as $view_display) {
-        if ($component = $view_display->getComponent($field)) {
+        if ($view_display->getComponent($field)) {
           // Delete field reference formatters.
           $view_display->removeComponent($field)->save();
         }
@@ -319,7 +319,7 @@ function pmmi_field_extras_update_8005() {
       ->loadByProperties($properties)
     ) {
       foreach ($form_displays as $form_display) {
-        if ($component = $form_display->getComponent($field)) {
+        if ($form_display->getComponent($field)) {
           $form_display->removeComponent($field)->save();
         }
       }
@@ -339,10 +339,10 @@ function pmmi_field_extras_update_8006() {
   $etm = \Drupal::entityTypeManager();
 
   $field = 'field_members';
-  $properties = array(
+  $properties = [
     'targetEntityType' => 'block_content',
     'bundle' => 'event',
-  );
+  ];
   /** @var \Drupal\field\Entity\FieldStorageConfig $field_definition */
   $field_definition = $manager->getFieldStorageDefinition($field, 'block_content');
   // Updating entity view display configs.
@@ -351,7 +351,7 @@ function pmmi_field_extras_update_8006() {
     ->loadByProperties($properties)
   ) {
     foreach ($view_displays as $view_display) {
-      if ($component = $view_display->getComponent($field)) {
+      if ($view_display->getComponent($field)) {
         // Delete field reference formatters.
         $view_display->removeComponent($field)->save();
       }
@@ -362,7 +362,7 @@ function pmmi_field_extras_update_8006() {
     ->loadByProperties($properties)
   ) {
     foreach ($form_displays as $form_display) {
-      if ($component = $form_display->getComponent($field)) {
+      if ($form_display->getComponent($field)) {
         $form_display->removeComponent($field)->save();
       }
     }
@@ -371,7 +371,7 @@ function pmmi_field_extras_update_8006() {
   $field_definition->delete();
   // Updating field config items.
   if ($entity_fields = $etm->getStorage('field_config')
-    ->loadByProperties(array('field_name' => $field))
+    ->loadByProperties(['field_name' => $field])
   ) {
     foreach ($entity_fields as $field_id) {
       $field_id->delete();
@@ -408,7 +408,7 @@ function pmmi_field_extras_update_8008() {
  * Replace serialized data to json data in viewfield type tables.
  */
 function pmmi_field_extras_update_8009() {
-  $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(array('field_type' => 'viewfield'));
+  $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['field_type' => 'viewfield']);
   foreach ($fields as $field) {
     $field_name = $field->getName();
     $table = 'block_content__' . $field_name;
@@ -417,7 +417,8 @@ function pmmi_field_extras_update_8009() {
       ->fields('t', ['entity_id', $field_name . '_settings'])
       ->execute()->fetchAllKeyed();
     foreach ($block_ids as $id => $settings) {
-      // We need to "unserialize" twice, as it's already wrongly stored in database.
+      // We need to "unserialize" twice, as it's already wrongly
+      // stored in database.
       $unserialized = unserialize(unserialize($settings));
       if (is_array($unserialized)) {
         $settings = Json::encode($unserialized);
