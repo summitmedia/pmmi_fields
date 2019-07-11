@@ -39,10 +39,10 @@ class PMMIEntityReferenceItem extends EntityReferenceItem {
    */
   public static function schema(FieldStorageDefinitionInterface $field_definition) {
     $schema = parent::schema($field_definition);
-    $schema['columns']['view_mode'] = array(
+    $schema['columns']['view_mode'] = [
       'type' => 'varchar',
       'length' => 256,
-    );
+    ];
 
     return $schema;
   }

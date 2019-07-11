@@ -40,14 +40,14 @@ function pmmi_field_extras_entity_base_field_info(EntityTypeInterface $entity_ty
         'alt_field_required' => FALSE,
         'file_extensions' => 'png jpg jpeg',
       ])
-      ->setDisplayOptions('form', array(
+      ->setDisplayOptions('form', [
         'type' => 'hidden',
-      ))
-      ->setDisplayOptions('form', array(
+      ])
+      ->setDisplayOptions('form', [
         'label' => 'hidden',
         'type' => 'image_image',
         'weight' => 0,
-      ))
+      ])
       ->setDisplayConfigurable('form', TRUE);
 
     return $fields;
@@ -75,6 +75,11 @@ function pmmi_field_extras_theme() {
  *
  * @param array $variables
  *   Contains the form element data from $element['entities'].
+ *
+ * @return array
+ *   Render array.
+ *
+ * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  */
 function theme_pmmi_field_extras_entity_table($variables) {
   $renderer = \Drupal::service('renderer');
@@ -163,7 +168,11 @@ function theme_pmmi_field_extras_entity_table($variables) {
       $row = [
         ['data' => $renderer->render($form[$key]['form']), 'colspan' => count($fields) + 1],
       ];
-      $rows[] = ['data' => $row, 'class' => ['ief-row-form'], 'no_striping' => TRUE];
+      $rows[] = [
+        'data' => $row,
+        'class' => ['ief-row-form'],
+        'no_striping' => TRUE,
+      ];
     }
   }
 

@@ -40,7 +40,6 @@ class DateRangeEventFormatter extends DateRangeEventRibbonFormatter {
     ] + parent::settingsForm($form, $form_state);
   }
 
-
   /**
    * {@inheritdoc}
    */

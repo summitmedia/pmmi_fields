@@ -31,7 +31,6 @@ class DateTimeTimezone extends DateTimeItem {
     return $properties;
   }
 
-
   /**
    * {@inheritdoc}
    */

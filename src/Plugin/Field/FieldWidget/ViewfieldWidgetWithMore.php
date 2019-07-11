@@ -27,8 +27,18 @@ use Drupal\viewfield\Plugin\Field\FieldWidget\ViewfieldWidget;
  */
 class ViewfieldWidgetWithMore extends ViewfieldWidget {
 
+  /**
+   * Array of default values for this field..
+   *
+   * @var \Drupal\Core\Field\FieldItemListInterface
+   */
   protected $items;
 
+  /**
+   * The order of this item in the array of sub-elements (0, 1, 2, etc.).
+   *
+   * @var int
+   */
   protected $delta;
 
   /**
@@ -67,25 +77,25 @@ class ViewfieldWidgetWithMore extends ViewfieldWidget {
       $view_instance = $view_object->preview();
       $saved_settings = $this->getSavedSettings();
 
-      $element['view_override_title'] = array(
+      $element['view_override_title'] = [
         '#type' => 'checkbox',
-        '#title' => t('Override title'),
+        '#title' => $this->t('Override title'),
         '#default_value' => isset($saved_settings['view_override_title']) ? $saved_settings['view_override_title'] : FALSE,
-      );
-      $element['view_title'] = array(
+      ];
+      $element['view_title'] = [
         '#type' => 'textfield',
-        '#title' => t('View title'),
+        '#title' => $this->t('View title'),
         '#default_value' => isset($saved_settings['view_title']) ? $saved_settings['view_title'] : '',
-        '#states' => array(
-          'visible' => array(
-            'input[name="' . $field_name . '[' . $delta . '][view_override_title]"]' => array('checked' => TRUE),
-          ),
-        ),
-      );
+        '#states' => [
+          'visible' => [
+            'input[name="' . $field_name . '[' . $delta . '][view_override_title]"]' => ['checked' => TRUE],
+          ],
+        ],
+      ];
 
-      $element['more'] = array(
+      $element['more'] = [
         '#type' => 'container',
-      );
+      ];
       if (!empty($view_instance)) {
         $this->prepareFormElements($element, $view_instance['#view']->display_handler, $view[1]);
         foreach (['attachment_after', 'attachment_before'] as $attachment_position) {
@@ -107,7 +117,7 @@ class ViewfieldWidgetWithMore extends ViewfieldWidget {
    * Get saved settings.
    */
   protected function getSavedSettings() {
-    $settings = array();
+    $settings = [];
     if ($values = $this->items[$this->delta]->settings) {
       $settings = Json::decode($values);
     }
@@ -127,12 +137,12 @@ class ViewfieldWidgetWithMore extends ViewfieldWidget {
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     foreach ($values as $key => $value) {
-      $settings_array = array();
+      $settings_array = [];
       // Save more link settings.
       foreach (['more', 'view_title', 'view_override_title'] as $setting) {
         $values[$key]['settings'] = isset($values[$key]['settings']) ? $values[$key]['settings'] : '';
         if (!empty($value[$setting])) {
-          $settings_array += array($setting => $value[$setting]);
+          $settings_array += [$setting => $value[$setting]];
         }
       }
       $values[$key]['settings'] .= Json::encode($settings_array);
@@ -155,35 +165,35 @@ class ViewfieldWidgetWithMore extends ViewfieldWidget {
   protected function prepareFormElements(&$element, $handler, $display, $attachment_position = '') {
     $input_name = $element['#field_name'] . '[' . $element['#delta'] . '][more][' . $display . '][use_more]';
     $display_name = !empty($attachment_position) ? $attachment_position : $display;
-    $element['more'][$display] = array(
+    $element['more'][$display] = [
       '#type' => 'fieldset',
       '#title' => $this->t('More link options for @display display', ['@display' => $display_name]),
-    );
-    $element['more'][$display]['use_more'] = array(
+    ];
+    $element['more'][$display]['use_more'] = [
       '#type' => 'checkbox',
-      '#title' => t('More link'),
+      '#title' => $this->t('More link'),
       '#default_value' => $this->getViewOptions($handler, 'use_more', $display),
-    );
-    $element['more'][$display]['use_more_text'] = array(
+    ];
+    $element['more'][$display]['use_more_text'] = [
       '#type' => 'textfield',
-      '#title' => t('More link text'),
+      '#title' => $this->t('More link text'),
       '#default_value' => $this->getViewOptions($handler, 'use_more_text', $display),
-      '#states' => array(
-        'visible' => array(
-          'input[name="' . $input_name . '"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
-    $element['more'][$display]['link_url'] = array(
+      '#states' => [
+        'visible' => [
+          'input[name="' . $input_name . '"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
+    $element['more'][$display]['link_url'] = [
       '#type' => 'textfield',
-      '#title' => t('More link url'),
+      '#title' => $this->t('More link url'),
       '#default_value' => $this->getViewOptions($handler, 'link_url', $display),
-      '#states' => array(
-        'visible' => array(
-          'input[name="' . $input_name . '"]' => array('checked' => TRUE),
-        ),
-      ),
-    );
+      '#states' => [
+        'visible' => [
+          'input[name="' . $input_name . '"]' => ['checked' => TRUE],
+        ],
+      ],
+    ];
   }
 
   /**

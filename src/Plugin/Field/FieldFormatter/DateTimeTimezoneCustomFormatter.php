@@ -22,10 +22,10 @@ class DateTimeTimezoneCustomFormatter extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
-      $output ='';
+      $output = '';
       if (!empty($item->date)) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;

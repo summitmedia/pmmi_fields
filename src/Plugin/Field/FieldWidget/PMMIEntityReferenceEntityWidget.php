@@ -90,7 +90,6 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     $target_bundles = $this->getTargetBundles();
     $fields = $this->inlineFormHandler->getTableFields($target_bundles);
 
-
     // Add Table Header for view mode field.
     $fields['view_mode'] = [
       'type' => 'view_mode',
@@ -462,7 +461,13 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
     $field_definition = $this->fieldDefinition;
     foreach ($values as &$value) {
-      $view_mode = NestedArray::getValue($form_state->getValues(), [$field_definition->getName(), 'entities', $value['weight'], 'view_mode']);
+      $view_mode = NestedArray::getValue($form_state->getValues(), [
+        $field_definition->getName(),
+        'entities',
+        $value['weight'],
+        'view_mode',
+      ]);
+
       $value['view_mode'] = $view_mode;
     }
     return $values;

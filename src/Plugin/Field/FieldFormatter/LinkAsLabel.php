@@ -24,9 +24,9 @@ class LinkAsLabel extends LinkFormatter {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'link_label' => '',
-    ) + parent::defaultSettings();
+    ] + parent::defaultSettings();
   }
 
   /**
@@ -35,13 +35,13 @@ class LinkAsLabel extends LinkFormatter {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $elements = parent::settingsForm($form, $form_state);
 
-    $elements['link_label'] = array(
+    $elements['link_label'] = [
       '#type' => 'textfield',
-      '#title' => t('Link label'),
+      '#title' => $this->t('Link label'),
       '#required' => TRUE,
       '#default_value' => $this->getSetting('link_label'),
       '#description' => $this->t('This label used if link text missed in link field.'),
-    );
+    ];
 
     return $elements;
   }
@@ -50,7 +50,7 @@ class LinkAsLabel extends LinkFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = array();
+    $element = [];
     $entity = $items->getEntity();
     $settings = $this->getSettings();
 
@@ -73,9 +73,9 @@ class LinkAsLabel extends LinkFormatter {
       }
 
       if (!empty($settings['url_only']) && !empty($settings['url_plain'])) {
-        $element[$delta] = array(
+        $element[$delta] = [
           '#plain_text' => $link_title,
-        );
+        ];
 
         if (!empty($item->_attributes)) {
           // Piggyback on the metadata attributes, which will be placed in the
@@ -84,19 +84,19 @@ class LinkAsLabel extends LinkFormatter {
           // @todo Does RDF need a URL rather than an internal URI here?
           // @see \Drupal\Tests\rdf\Kernel\Field\LinkFieldRdfaTest.
           $content = str_replace('internal:/', '', $item->uri);
-          $item->_attributes += array('content' => $content);
+          $item->_attributes += ['content' => $content];
         }
       }
       else {
-        $element[$delta] = array(
+        $element[$delta] = [
           '#type' => 'link',
           '#title' => $link_title,
           '#options' => $url->getOptions(),
-        );
+        ];
         $element[$delta]['#url'] = $url;
 
         if (!empty($item->_attributes)) {
-          $element[$delta]['#options'] += array('attributes' => array());
+          $element[$delta]['#options'] += ['attributes' => []];
           $element[$delta]['#options']['attributes'] += $item->_attributes;
           // Unset field item attributes since they have been included in the
           // formatter output and should not be rendered in the field template.
