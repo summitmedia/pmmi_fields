@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\pmmi_field_extras\Plugin\Field\FieldWidget\ViewfieldWidgetWithMore.
+ * Contains \Drupal\pmmi_fields\Plugin\Field\FieldWidget\ViewfieldWidgetWithMore.
  */
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;

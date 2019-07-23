@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldFormatter;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains pmmi_field_extras.module.
+ * Contains pmmi_fields.module.
  */
 
 use Drupal\Core\Render\Element;
@@ -13,10 +13,10 @@ use Drupal\Core\Entity\EntityTypeInterface;
 /**
  * Implements hook_help().
  */
-function pmmi_field_extras_help($route_name, RouteMatchInterface $route_match) {
+function pmmi_fields_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    // Main module help for the pmmi_field_extras module.
-    case 'help.page.pmmi_field_extras':
+    // Main module help for the pmmi_fields module.
+    case 'help.page.pmmi_fields':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('PMMI Fields') . '</p>';
@@ -29,7 +29,7 @@ function pmmi_field_extras_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_entity_base_field_info().
  */
-function pmmi_field_extras_entity_base_field_info(EntityTypeInterface $entity_type) {
+function pmmi_fields_entity_base_field_info(EntityTypeInterface $entity_type) {
   $fields = [];
   if ($entity_type->id() === 'menu_link_content') {
     $fields['submenu_background'] = BaseFieldDefinition::create('image')
@@ -57,11 +57,11 @@ function pmmi_field_extras_entity_base_field_info(EntityTypeInterface $entity_ty
 /**
  * Implements hook_theme().
  */
-function pmmi_field_extras_theme() {
+function pmmi_fields_theme() {
   return [
-    'pmmi_field_extras_entity_table' => [
+    'pmmi_fields_entity_table' => [
       'render element' => 'form',
-      'function' => 'theme_pmmi_field_extras_entity_table',
+      'function' => 'theme_pmmi_fields_entity_table',
     ],
     'double_field_mail_link' => [
       'render element' => 'element',
@@ -81,7 +81,7 @@ function pmmi_field_extras_theme() {
  *
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  */
-function theme_pmmi_field_extras_entity_table($variables) {
+function theme_pmmi_fields_entity_table($variables) {
   $renderer = \Drupal::service('renderer');
   $form = $variables['form'];
   $entity_type = $form['#entity_type'];

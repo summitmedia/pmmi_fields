@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -82,7 +82,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
 
     $element['entities'] = [
       '#tree' => TRUE,
-      '#theme' => 'pmmi_field_extras_entity_table',
+      '#theme' => 'pmmi_fields_entity_table',
       '#entity_type' => $target_type,
     ];
 

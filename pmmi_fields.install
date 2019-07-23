@@ -15,14 +15,14 @@ use Drupal\Component\Serialization\Json;
 /**
  * Implements hook_install().
  */
-function pmmi_field_extras_install() {
-  pmmi_field_extras_update_8002();
+function pmmi_fields_install() {
+  pmmi_fields_update_8002();
 }
 
 /**
  * Create "submenu_background" field definition.
  */
-function pmmi_field_extras_update_8001() {
+function pmmi_fields_update_8001() {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   \Drupal::service('entity.definition_update_manager')->applyUpdates();
 }
@@ -32,7 +32,7 @@ function pmmi_field_extras_update_8001() {
  *
  * Previous update 8001 doesn't work for that field.
  */
-function pmmi_field_extras_update_8002() {
+function pmmi_fields_update_8002() {
   \Drupal::entityDefinitionUpdateManager()->applyUpdates();
 }
 
@@ -41,7 +41,7 @@ function pmmi_field_extras_update_8002() {
  *
  * Update fields in the PackExpoShow Block type.
  */
-function pmmi_field_extras_update_8003() {
+function pmmi_fields_update_8003() {
   $manager = \Drupal::entityDefinitionUpdateManager();
   $db = \Drupal::database();
   // Get existing storage definitions.
@@ -146,7 +146,7 @@ function pmmi_field_extras_update_8003() {
  *
  * Update fields (block_1 - 6) in the Container Block type.
  */
-function pmmi_field_extras_update_8004() {
+function pmmi_fields_update_8004() {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   $manager = \Drupal::entityDefinitionUpdateManager();
   $db = \Drupal::database();
@@ -272,7 +272,7 @@ function pmmi_field_extras_update_8004() {
  *
  * Delete fields: Member Price, Non-Member Price, Disclaimer, Report Type, Year.
  */
-function pmmi_field_extras_update_8005() {
+function pmmi_fields_update_8005() {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   $manager = \Drupal::entityDefinitionUpdateManager();
   $etm = \Drupal::entityTypeManager();
@@ -332,7 +332,7 @@ function pmmi_field_extras_update_8005() {
  *
  * Delete field (Members).
  */
-function pmmi_field_extras_update_8006() {
+function pmmi_fields_update_8006() {
   \Drupal::entityTypeManager()->clearCachedDefinitions();
   $manager = \Drupal::entityDefinitionUpdateManager();
   $config_factory = \Drupal::configFactory();
@@ -383,7 +383,7 @@ function pmmi_field_extras_update_8006() {
 /**
  * Remove 'Trade shows' field as it no longer needed.
  */
-function pmmi_field_extras_update_8007() {
+function pmmi_fields_update_8007() {
   $field_config = \Drupal::entityManager()->getStorage('field_config');
 
   if ($field = $field_config->load('node.company.field_trade_shows')) {
@@ -395,7 +395,7 @@ function pmmi_field_extras_update_8007() {
 /**
  * Remove 'Expired' field as it no longer needed.
  */
-function pmmi_field_extras_update_8008() {
+function pmmi_fields_update_8008() {
   $field_config = \Drupal::entityManager()->getStorage('field_config');
 
   if ($field = $field_config->load('taxonomy_term.trade_shows.field_expired')) {
@@ -407,7 +407,7 @@ function pmmi_field_extras_update_8008() {
 /**
  * Replace serialized data to json data in viewfield type tables.
  */
-function pmmi_field_extras_update_8009() {
+function pmmi_fields_update_8009() {
   $fields = \Drupal::entityTypeManager()->getStorage('field_config')->loadByProperties(['field_type' => 'viewfield']);
   foreach ($fields as $field) {
     $field_name = $field->getName();
@@ -436,7 +436,7 @@ function pmmi_field_extras_update_8009() {
 /**
  * Update Article Content Type.
  */
-function pmmi_field_extras_update_8010() {
+function pmmi_fields_update_8010() {
   $site = theme_get_setting('site', 'pmmi_bootstrap');
   if ($site === 'contractpackaging') {
     \Drupal::entityTypeManager()->clearCachedDefinitions();
