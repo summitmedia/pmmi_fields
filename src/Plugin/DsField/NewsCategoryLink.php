@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\DsField;
+namespace Drupal\pmmi_fields\Plugin\DsField;
 
 use Drupal\ds\Plugin\DsField\Node\NodeLink;
 use Drupal\Core\Form\FormStateInterface;

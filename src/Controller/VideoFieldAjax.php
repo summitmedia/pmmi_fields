@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Controller;
+namespace Drupal\pmmi_fields\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 /**
  * Class VideoFieldAjax.
  *
- * @package Drupal\pmmi_field_extras\Controller
+ * @package Drupal\pmmi_fields\Controller
  */
 class VideoFieldAjax extends ControllerBase {
 

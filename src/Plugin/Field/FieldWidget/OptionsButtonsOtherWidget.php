@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -104,7 +104,7 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
     $this->searchForOther($element);
 
-    $element['#attached']['library'][] = 'pmmi_field_extras/other-field';
+    $element['#attached']['library'][] = 'pmmi_fields/other-field';
 
     return $element;
   }

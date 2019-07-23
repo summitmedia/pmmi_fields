@@ -5,7 +5,7 @@
  * Contains \Drupal\viewfield\Plugin\Field\FieldFormatter\ViewfieldDefaultFormatter.
  */
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldFormatter;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\viewfield\Plugin\Field\FieldFormatter\ViewfieldDefaultFormatter;
 use Drupal\Core\Field\FieldItemListInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
