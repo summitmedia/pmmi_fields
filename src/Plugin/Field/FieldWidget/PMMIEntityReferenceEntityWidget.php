@@ -2,6 +2,7 @@
 
 namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
+use Drupal\Component\Utility\Crypt;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -25,7 +26,6 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
    * {@inheritdoc}
    */
   public function formElement(FieldItemListInterface $items, $delta, array $element, array &$form, FormStateInterface $form_state) {
-
     $settings = $this->getSettings();
     $target_type = $this->getFieldSetting('target_type');
     // Get the entity type labels for the UI strings.
@@ -38,9 +38,9 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     ]);
 
     // Assign a unique identifier to each IEF widget.
-    // Since $parents can get quite long, sha1() ensures that every id has
+    // Since $parents can get quite long, hashing ensures that every id has
     // a consistent and relatively short length while maintaining uniqueness.
-    $this->setIefId(sha1(implode('-', $parents)));
+    $this->setIefId(Crypt::hashBase64(implode('-', $parents)));
 
     // Get the langcode of the parent entity.
     $parent_langcode = $items->getEntity()->language()->getId();
@@ -49,7 +49,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     $wrapper = 'inline-entity-form-' . $this->getIefId();
 
     $element = [
-        '#type' => 'fieldset',
+        '#type' => $this->getSetting('collapsible') ? 'details' : 'fieldset',
         '#tree' => TRUE,
         '#description' => $this->fieldDefinition->getDescription(),
         '#prefix' => '<div id="' . $wrapper . '">',
@@ -62,6 +62,9 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
           [get_class($this), 'removeTranslatabilityClue'],
         ],
       ] + $element;
+    if ($element['#type'] == 'details') {
+      $element['#open'] = !$this->getSetting('collapsed');
+    }
 
     $element['#attached']['library'][] = 'inline_entity_form/widget';
 
@@ -71,6 +74,11 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
       $this->getIefId(),
       'entities',
     ]);
+
+    // Prepare cardinality information.
+    $entities_count = count($entities);
+    $cardinality = $this->fieldDefinition->getFieldStorageDefinition()->getCardinality();
+    $cardinality_reached = ($cardinality > 0 && $entities_count == $cardinality);
 
     // Build the "Multiple value" widget.
     // TODO - does this belong in #element_validate?
@@ -89,14 +97,6 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     // Get the fields that should be displayed in the table.
     $target_bundles = $this->getTargetBundles();
     $fields = $this->inlineFormHandler->getTableFields($target_bundles);
-
-    // Add Table Header for view mode field.
-    $fields['view_mode'] = [
-      'type' => 'view_mode',
-      'label' => $this->t('View Mode'),
-      'weight' => 3,
-    ];
-
     $context = [
       'parent_entity_type' => $this->fieldDefinition->getTargetEntityTypeId(),
       'parent_bundle' => $this->fieldDefinition->getTargetBundle(),
@@ -107,7 +107,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     $this->moduleHandler->alter('inline_entity_form_table_fields', $fields, $context);
     $element['entities']['#table_fields'] = $fields;
 
-    $weight_delta = max(ceil(count($entities) * 1.2), 50);
+    $weight_delta = max(ceil($entities_count * 1.2), 50);
     foreach ($entities as $key => $value) {
       // Data used by theme_inline_entity_form_entity_table().
       /** @var \Drupal\Core\Entity\EntityInterface $entity */
@@ -128,7 +128,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
         ];
 
         // Add the appropriate form.
-        if ($value['form'] == 'edit') {
+        if (in_array($value['form'], ['edit', 'duplicate'])) {
           $element['entities'][$key]['form'] = [
             '#type' => 'container',
             '#attributes' => ['class' => ['ief-form', 'ief-form-row']],
@@ -137,21 +137,13 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
               $entity->bundle(),
               $parent_langcode,
               $key,
-              array_merge($parents, [
-                'inline_entity_form',
-                'entities',
-                $key,
-                'form',
-              ]),
-              $entity
+              array_merge($parents, ['inline_entity_form', 'entities', $key, 'form']),
+              $value['form'] == 'edit' ? $entity : $entity->createDuplicate()
             ),
           ];
 
           $element['entities'][$key]['form']['inline_entity_form']['#process'] = [
-            [
-              '\Drupal\inline_entity_form\Element\InlineEntityForm',
-              'processEntityForm',
-            ],
+            ['\Drupal\inline_entity_form\Element\InlineEntityForm', 'processEntityForm'],
             [get_class($this), 'addIefSubmitCallbacks'],
             [get_class($this), 'buildEntityFormActions'],
           ];
@@ -224,6 +216,23 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
           ];
         }
 
+        // Add the duplicate button, if allowed.
+        if ($settings['allow_duplicate'] && !$cardinality_reached && $entity->access('create')) {
+          $row['actions']['ief_entity_duplicate'] = [
+            '#type' => 'submit',
+            '#value' => $this->t('Duplicate'),
+            '#name' => 'ief-' . $this->getIefId() . '-entity-duplicate-' . $key,
+            '#limit_validation_errors' => [array_merge($parents, ['actions'])],
+            '#ajax' => [
+              'callback' => 'inline_entity_form_get_element',
+              'wrapper' => $wrapper,
+            ],
+            '#submit' => ['inline_entity_form_open_row_form'],
+            '#ief_row_delta' => $key,
+            '#ief_row_form' => 'duplicate',
+          ];
+        }
+
         // If 'allow_existing' is on, the default removal operation is unlink
         // and the access check for deleting happens inside the controller
         // removeForm() method.
@@ -256,9 +265,6 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
       return $element;
     }
 
-    $entities_count = count($entities);
-    $cardinality = $this->fieldDefinition->getFieldStorageDefinition()
-      ->getCardinality();
     if ($cardinality > 1) {
       // Add a visual cue of cardinality count.
       $message = $this->t('You have added @entities_count out of @cardinality_count allowed @label.', [
@@ -271,7 +277,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
       ];
     }
     // Do not return the rest of the form if cardinality count has been reached.
-    if ($cardinality > 0 && $entities_count == $cardinality) {
+    if ($cardinality_reached) {
       return $element;
     }
 
@@ -282,11 +288,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     // If the field is required and empty try to open one of the forms.
     if (empty($entities) && $this->fieldDefinition->isRequired()) {
       if ($settings['allow_existing'] && !$allow_new) {
-        $form_state->set([
-          'inline_entity_form',
-          $this->getIefId(),
-          'form',
-        ], 'ief_add_existing');
+        $form_state->set(['inline_entity_form', $this->getIefId(), 'form'], 'ief_add_existing');
         $hide_cancel = TRUE;
       }
       elseif ($create_bundles_count == 1 && $allow_new && !$settings['allow_existing']) {
@@ -297,16 +299,8 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
         $parent_entity_type = $this->fieldDefinition->getTargetEntityTypeId();
         $parent_bundle = $this->fieldDefinition->getTargetBundle();
         if ($parent_entity_type != $target_type || $parent_bundle != $bundle) {
-          $form_state->set([
-            'inline_entity_form',
-            $this->getIefId(),
-            'form',
-          ], 'add');
-          $form_state->set([
-            'inline_entity_form',
-            $this->getIefId(),
-            'form settings',
-          ], [
+          $form_state->set(['inline_entity_form', $this->getIefId(), 'form'], 'add');
+          $form_state->set(['inline_entity_form', $this->getIefId(), 'form settings'], [
             'bundle' => $bundle,
           ]);
           $hide_cancel = TRUE;
@@ -315,11 +309,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     }
 
     // If no form is open, show buttons that open one.
-    $open_form = $form_state->get([
-      'inline_entity_form',
-      $this->getIefId(),
-      'form',
-    ]);
+    $open_form = $form_state->get(['inline_entity_form', $this->getIefId(), 'form']);
 
     if (empty($open_form)) {
       $element['actions'] = [
@@ -383,12 +373,7 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
     }
     else {
       // There's a form open, show it.
-      if ($form_state->get([
-          'inline_entity_form',
-          $this->getIefId(),
-          'form',
-        ]) == 'add'
-      ) {
+      if ($form_state->get(['inline_entity_form', $this->getIefId(), 'form']) == 'add') {
         $element['form'] = [
           '#type' => 'fieldset',
           '#attributes' => ['class' => ['ief-form', 'ief-form-bottom']],
@@ -398,13 +383,10 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
             $parent_langcode,
             NULL,
             array_merge($parents, ['inline_entity_form'])
-          ),
+          )
         ];
         $element['form']['inline_entity_form']['#process'] = [
-          [
-            '\Drupal\inline_entity_form\Element\InlineEntityForm',
-            'processEntityForm',
-          ],
+          ['\Drupal\inline_entity_form\Element\InlineEntityForm', 'processEntityForm'],
           [get_class($this), 'addIefSubmitCallbacks'],
           [get_class($this), 'buildEntityFormActions'],
         ];
