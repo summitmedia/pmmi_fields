@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldFormatter;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldFormatter\EntityReferenceEntityFormatter;
@@ -24,7 +24,7 @@ class PMMIEntityReferenceEntityFormatter extends EntityReferenceEntityFormatter 
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
 
-    $elements = array();
+    $elements = [];
 
     foreach ($this->getEntitiesToView($items, $langcode) as $delta => $entity) {
       // Due to render caching and delayed calls, the viewElements() method
@@ -69,7 +69,7 @@ class PMMIEntityReferenceEntityFormatter extends EntityReferenceEntityFormatter 
       // entity's url. Since we don't know what the markup of the entity will
       // be, we shouldn't rely on it for structured data such as RDFa.
       if (!empty($items[$delta]->_attributes) && !$entity->isNew() && $entity->hasLinkTemplate('canonical')) {
-        $items[$delta]->_attributes += array('resource' => $entity->toUrl()->toString());
+        $items[$delta]->_attributes += ['resource' => $entity->toUrl()->toString()];
       }
     }
 

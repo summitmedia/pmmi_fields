@@ -1,13 +1,12 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
-
 
 /**
  * Plugin implementation of the 'pmmi_datetime_datelist' widget.
@@ -26,12 +25,12 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
    * {@inheritdoc}
    */
   public static function defaultSettings() {
-    return array(
+    return [
       'date_part' => 'Y',
       'increment' => '1',
       'time_type' => '24',
       'field_label' => '',
-    );
+    ];
   }
 
   /**
@@ -46,13 +45,13 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
       $element['#title'] = $settings['field_label'];
     }
 
-    $element['value'] = array(
+    $element['value'] = [
       '#type' => 'datelist',
       '#date_increment' => $settings['increment'],
-      '#date_part_order' => array($date_part),
+      '#date_part_order' => [$date_part],
       '#date_timezone' => DATETIME_STORAGE_TIMEZONE,
       '#required' => $element['#required'],
-    );
+    ];
     $default_date = new DrupalDateTime('2000-01-01 12:00:00');
     $element['value']['#default_value'] = $default_date;
     // Set up the date part.
@@ -88,25 +87,25 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $element = parent::settingsForm($form, $form_state);
 
-    $element['date_part'] = array(
+    $element['date_part'] = [
       '#type' => 'select',
-      '#title' => t('Date part order'),
+      '#title' => $this->t('Date part order'),
       '#default_value' => $this->getSetting('date_part'),
-      '#options' => array(
-        'year' => t('Year'),
-        'month' => t('Month'),
-        'day' => t('Day'),
-      ),
-    );
-    $element['field_label'] = array(
+      '#options' => [
+        'year' => $this->t('Year'),
+        'month' => $this->t('Month'),
+        'day' => $this->t('Day'),
+      ],
+    ];
+    $element['field_label'] = [
       '#type' => 'textfield',
-      '#title' => t('Label for field'),
+      '#title' => $this->t('Label for field'),
       '#default_value' => $this->getSetting('field_label'),
-    );
-    $element['time_type'] = array(
+    ];
+    $element['time_type'] = [
       '#type' => 'hidden',
       '#value' => 'none',
-    );
+    ];
     $element['increment'] = [
       '#type' => 'hidden',
       '#value' => $this->getSetting('increment'),
@@ -165,11 +164,11 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
    * {@inheritdoc}
    */
   public function settingsSummary() {
-    $summary = array();
+    $summary = [];
 
-    $summary[] = t('Date part: @part', array('@part' => $this->getSetting('date_part')));
+    $summary[] = $this->t('Date part: @part', ['@part' => $this->getSetting('date_part')]);
     if ($this->getSetting('field_label')) {
-      $summary[] = t('Field label: @label', array('@label' => $this->getSetting('field_label')));
+      $summary[] = $this->t('Field label: @label', ['@label' => $this->getSetting('field_label')]);
     }
 
     return $summary;

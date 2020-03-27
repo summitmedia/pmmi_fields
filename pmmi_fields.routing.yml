@@ -1,8 +1,8 @@
 
-pmmi_field_extras.video_field_ajax_hello:
+pmmi_fields.video_field_ajax_hello:
   path: '/pmmi-fields/replace-video/{js}/{node}'
   defaults:
-    _controller: '\Drupal\pmmi_field_extras\Controller\VideoFieldAjax::replaceVideo'
+    _controller: '\Drupal\pmmi_fields\Controller\VideoFieldAjax::replaceVideo'
     _title: 'replaceVideo'
   requirements:
     _permission: 'access content'

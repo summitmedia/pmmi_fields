@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldType;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldType;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\TypedData\DataDefinition;
@@ -30,7 +30,6 @@ class DateTimeTimezone extends DateTimeItem {
 
     return $properties;
   }
-
 
   /**
    * {@inheritdoc}

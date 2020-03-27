@@ -1,5 +1,5 @@
 {
-  "name": "drupal/pmmi_field_extras",
+  "name": "drupal/pmmi_fields",
   "type": "drupal-module",
   "description": "PMMI Fields",
   "keywords": ["Drupal"],

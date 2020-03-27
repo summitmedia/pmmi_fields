@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\Plugin\Field\FieldWidget\EntityReferenceAutocompleteWidget;
@@ -31,13 +31,13 @@ class PMMIEntityReferenceAutocomplete extends EntityReferenceAutocompleteWidget 
     foreach ($view_modes as $key => $view_mode) {
       $options[$key] = $view_mode['label'];
     }
-    $widget['view_mode'] = array(
+    $widget['view_mode'] = [
       '#title' => $this->t('View mode'),
       '#type' => 'select',
       '#default_value' => isset($items[$delta]) ? $items[$delta]->view_mode : 'default',
       '#options' => $options,
       '#weight' => 10,
-    );
+    ];
 
     return $widget;
   }

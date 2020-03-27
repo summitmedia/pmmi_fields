@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldFormatter;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -39,7 +39,6 @@ class DateRangeEventFormatter extends DateRangeEventRibbonFormatter {
       // Implement settings form.
     ] + parent::settingsForm($form, $form_state);
   }
-
 
   /**
    * {@inheritdoc}

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldWidget;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldWidget;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -26,11 +26,15 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
 
   /**
    * The entity manager.
+   *
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
   /**
-   * Field settings.
+   * The field definition settings.
+   *
+   * @var \Drupal\Core\Field\FieldDefinitionInterfacegetSettings
    */
   protected $fieldSettings;
 
@@ -85,9 +89,9 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
     $element['other_field_name'] = [
       '#type' => 'select',
       '#options' => $fields,
-      '#title' => t('Target'),
+      '#title' => $this->t('Target'),
       '#default_value' => $this->getSetting('other_field_name'),
-      '#description' => t('The field to show/hide.'),
+      '#description' => $this->t('The field to show/hide.'),
     ];
 
     return $element;
@@ -100,7 +104,7 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
     $element = parent::formElement($items, $delta, $element, $form, $form_state);
     $this->searchForOther($element);
 
-    $element['#attached']['library'][] = 'pmmi_field_extras/other-field';
+    $element['#attached']['library'][] = 'pmmi_fields/other-field';
 
     return $element;
   }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\pmmi_field_extras\Plugin\Field\FieldFormatter;
+namespace Drupal\pmmi_fields\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeCustomFormatter;
@@ -22,10 +22,10 @@ class DateTimeTimezoneCustomFormatter extends DateTimeCustomFormatter {
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $elements = array();
+    $elements = [];
 
     foreach ($items as $delta => $item) {
-      $output ='';
+      $output = '';
       if (!empty($item->date)) {
         /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
         $date = $item->date;
