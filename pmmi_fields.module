@@ -73,20 +73,20 @@ function pmmi_fields_theme() {
 /**
  * Themes the table showing existing entity references in the widget.
  *
- * @NOTE This is 100% copy past from theme_inline_entity_form_entity_table(),
+ * @NOTE This is 100% copy paste from theme_inline_entity_form_entity_table(),
  * except few lines.
- * You can find custom code by comments 'Start custom code' 'End custom code'.
- * Unfortunately there is now way to modify existing theme_inline_entity_form_entity_table() function.
- * The only way to do it is decline view_mode as a field type and added it as a field to all entities.
+ * You can find custom code by comments 'Start custom code' and 'End custom code'.
+ * Unfortunately there is no way to reuse existing theme_inline_entity_form_entity_table() function.
+ * The only way to do it is mark view_mode as a field type and added it as a field to all entities.
  * This will be a big overhead. For details see this line in this function.
- * That's why we have only one way to add view mode to this table.
- * Just copy past and modify.
- *
- * Important: Fill free to update this code with the latest one from theme_inline_entity_form_entity_table(),
- * put back custom code after your update.
  * @code
  *  elseif ($field['type'] == 'field' && $entity->hasField($field_name)) {
  * @endcode
+ * That's why we have only one way to add view mode to this table.
+ * Just copy paste and modify.
+ *
+ * Important: Fill free to update this code with the latest one from theme_inline_entity_form_entity_table(),
+ * after that put back custom code after update.
  *
  * @param array $variables
  *   Contains the form element data from $element['entities'].
