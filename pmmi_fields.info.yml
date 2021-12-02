@@ -2,6 +2,7 @@ name: PMMI Fields
 type: module
 description: PMMI Fields
 core: 8.x
+core_version_requirement: ^8 || ^9
 package: PMMI
 dependencies:
   - datetime

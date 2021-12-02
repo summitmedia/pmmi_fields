@@ -57,7 +57,7 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
       $configuration['field_definition'],
       $configuration['settings'],
       $configuration['third_party_settings'],
-      $container->get('entity.manager')
+      $container->get('entity_type.manager')
     );
   }
 

@@ -6,6 +6,7 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime\Plugin\Field\FieldWidget\DateTimeWidgetBase;
 
 /**
@@ -49,7 +50,7 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
       '#type' => 'datelist',
       '#date_increment' => $settings['increment'],
       '#date_part_order' => [$date_part],
-      '#date_timezone' => DATETIME_STORAGE_TIMEZONE,
+      '#date_timezone' => DateTimeItemInterface::STORAGE_TIMEZONE,
       '#required' => $element['#required'],
     ];
     $default_date = new DrupalDateTime('2000-01-01 12:00:00');
@@ -128,12 +129,12 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
           case DateTimeItem::DATETIME_TYPE_DATE:
             // If this is a date-only field, set it to the default time so the
             // timezone conversion can be reversed.
-            datetime_date_default_time($date);
-            $format = DATETIME_DATE_STORAGE_FORMAT;
+            $date->setDefaultDateTime();
+            $format = DateTimeItemInterface::DATE_STORAGE_FORMAT;
             break;
 
           default:
-            $format = DATETIME_DATETIME_STORAGE_FORMAT;
+            $format = DateTimeItemInterface::DATETIME_STORAGE_FORMAT;
             break;
         }
         // Adjust the date for storage.
@@ -153,7 +154,7 @@ class PMMIDateTimeDatelistWidget extends DateTimeWidgetBase {
             $date = new DrupalDateTime('2000-01-' . $day . ' 12:00:00');
             break;
         }
-        $date->setTimezone(new \DateTimezone(DATETIME_STORAGE_TIMEZONE));
+        $date->setTimezone(new \DateTimezone(DateTimeItemInterface::STORAGE_TIMEZONE));
         $item['value'] = $date->format($format);
       }
     }

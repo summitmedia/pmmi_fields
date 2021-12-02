@@ -16,7 +16,6 @@ use Drupal\Component\Serialization\Json;
  * Implements hook_install().
  */
 function pmmi_fields_install() {
-  pmmi_fields_update_8002();
 }
 
 /**
