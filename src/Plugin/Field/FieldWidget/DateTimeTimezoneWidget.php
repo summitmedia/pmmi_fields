@@ -28,7 +28,7 @@ class DateTimeTimezoneWidget extends DateTimeDefaultWidget {
     $element['timezone'] = [
       '#type' => 'select',
       '#options' => array_combine(\DateTimeZone::listIdentifiers(), \DateTimeZone::listIdentifiers()),
-      '#default_value' => $items[$delta]->timezone ?: drupal_get_user_timezone(),
+      '#default_value' => $items[$delta]->timezone ?: date_default_timezone_get(),
       '#required' => $element['#required'],
     ];
 

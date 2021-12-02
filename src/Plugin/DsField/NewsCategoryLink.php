@@ -2,6 +2,7 @@
 
 namespace Drupal\pmmi_fields\Plugin\DsField;
 
+use Drupal\Core\Link;
 use Drupal\ds\Plugin\DsField\Node\NodeLink;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -77,7 +78,7 @@ class NewsCategoryLink extends NodeLink {
       if (!empty($config['link class'])) {
         $url_info->setOption('attributes', ['class' => explode(' ', $config['link class'])]);
       }
-      $output = \Drupal::l($output, $url_info);
+      $output = Link::fromTextAndUrl($output, $url_info);
     }
     else {
       $output = Html::escape($output);
