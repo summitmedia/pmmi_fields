@@ -22,14 +22,14 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
  *   multiple_values = TRUE
  * )
  */
-class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements ContainerFactoryPluginInterface {
+class OptionsButtonsOtherWidget extends OptionsButtonsWidget {
 
   /**
    * The entity manager.
    *
-   * @var \Drupal\Core\Entity\EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityManager;
+  protected $entityTypeManager;
 
   /**
    * The field definition settings.
@@ -43,7 +43,7 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
    */
   public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, array $third_party_settings, EntityTypeManagerInterface $entity_manager) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $third_party_settings);
-    $this->entityManager = $entity_manager;
+    $this->entityTypeManager = $entity_manager;
     $this->fieldSettings = $field_definition->getSettings();
   }
 
@@ -76,7 +76,8 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $display = $form_state->getFormObject()->getEntity();
     $fields = [];
-    $definitions = $this->entityManager->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
+
+    $definitions = \Drupal::service('entity_field.manager')->getFieldDefinitions($display->getTargetEntityTypeId(), $display->getTargetBundle());
     $current_field = $this->fieldDefinition->getName();
     foreach ($display->getComponents() as $name => $field) {
       if (!isset($definitions[$name]) || $name === $current_field) {
@@ -135,11 +136,11 @@ class OptionsButtonsOtherWidget extends OptionsButtonsWidget implements Containe
    * Create new entity.
    */
   public function createNewEntity($entity_type_id, $bundle, $label) {
-    $entity_type = $this->entityManager->getDefinition($entity_type_id);
+    $entity_type = \Drupal::service('entity_field.manager')->getDefinition($entity_type_id);
     $bundle_key = $entity_type->getKey('bundle');
     $label_key = $entity_type->getKey('label');
 
-    $entity = $this->entityManager->getStorage($entity_type_id)->create([
+    $entity = $this->entityTypeManager->getStorage($entity_type_id)->create([
       $bundle_key => $bundle,
       $label_key => $label,
       'weight' => 999,
