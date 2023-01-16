@@ -61,7 +61,6 @@ function pmmi_fields_theme() {
   return [
     'pmmi_fields_entity_table' => [
       'render element' => 'form',
-      'function' => 'theme_pmmi_fields_entity_table',
     ],
     'double_field_mail_link' => [
       'render element' => 'element',
@@ -96,7 +95,7 @@ function pmmi_fields_theme() {
  *
  * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
  */
-function theme_pmmi_fields_entity_table($variables) {
+function template_preprocess_pmmi_fields_entity_table(&$variables) {
   /** @var \Drupal\Core\Render\Renderer $renderer */
   $renderer = \Drupal::service('renderer');
   $form = $variables['form'];
@@ -204,7 +203,7 @@ function theme_pmmi_fields_entity_table($variables) {
       ];
     }
 
-    $table = [
+    $variables['table'] = [
       '#type' => 'table',
       '#header' => $header,
       '#rows' => $rows,
@@ -215,6 +214,5 @@ function theme_pmmi_fields_entity_table($variables) {
       '#tabledrag' => $tabledrag,
     ];
 
-    return $renderer->render($table);
   }
 }
