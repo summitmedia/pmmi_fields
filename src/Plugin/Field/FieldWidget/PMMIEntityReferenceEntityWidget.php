@@ -77,6 +77,10 @@ class PMMIEntityReferenceEntityWidget extends InlineEntityFormComplex {
    * {@inheritdoc}
    */
   public function massageFormValues(array $values, array $form, FormStateInterface $form_state) {
+    // Check if item has target_id for adding existing value.
+    if (array_key_exists('target_id', $values)) {
+      return $values;
+    }
     $field_definition = $this->fieldDefinition;
     foreach ($values as &$value) {
       $view_mode = NestedArray::getValue($form_state->getValues(), [
