@@ -106,7 +106,7 @@ class DateRangeEventRibbonFormatter extends DateTimeFormatterBase {
         ],
       ];
     }
-    return render($build);
+    return \Drupal::service('renderer')->render($build);
   }
 
   /**
