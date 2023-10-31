@@ -69,7 +69,7 @@ class VideoFieldAjax extends ControllerBase {
         ->getViewBuilder($entity->getEntityTypeId())
         ->view($entity, 'video_ajax_mode');
 
-      $node_rendered = render($node_render);
+      $node_rendered = \Drupal::service('renderer')->render($node_render);
       $response->addCommand(new ReplaceCommand('#video-node-info', $node_rendered));
     }
 
